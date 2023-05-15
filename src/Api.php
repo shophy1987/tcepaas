@@ -2,6 +2,8 @@
 
 namespace Tcepaas;
 
+use Tcepaas\Exception\ApiException;
+
 abstract class Api
 {
     const BASE_URL = 'https://oapi.epaas.qq.com/';
@@ -31,7 +33,26 @@ abstract class Api
         return $this->request('DELETE', $uri, ['headers' => $headers, 'query' => $data]);
     }
 
-    abstract protected function request($method, $uri, $data = [], $headers = []);
+    protected function request($method, $uri, $data = [], $headers = [])
+    {
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => self::BASE_URL, 
+            'timeout' => 15
+        ]);
+        $response = $client->request($method, uri, $data, $headers);
+        if ($response->getStatusCode() == 204) {
+            return [];
+        } else {
+            $result = json_decode($this->response->getBody()->getContents(), true);
+            if (isset($response['errcode']) && $response['errcode'] != 0) {
+                throw new ApiException($response['errmsg'] ?? 'unknown error', $response['errcode']);
+            }
+
+            return $result;
+        }
+    }
+
+    abstract protected function log($message, $type);
 
     abstract protected function getCache($key);
 

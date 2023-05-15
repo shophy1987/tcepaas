@@ -1,8 +1,9 @@
-<?php
+<?php 
 
-namespace Tcepaas\Trait;
+namespace Tcepaas\Traits;
 
-use Tcepaas\Helper\Utils;
+use Tcepaas\CorpServiceHandle;
+use Tcepaas\Exception\ArgumentException;
 
 trait NotifyTrait
 {
@@ -18,31 +19,36 @@ trait NotifyTrait
         $this->suiteEncodingAesKey = $encoding_aes_key;
     }
 
-    public function verifyMessage($nonce, $timestamp, $signature, $msg_encrypt)
+    public function handleMessage($nonce, $timestamp, $signature, $msg_encrypt)
     {
-        if ($suite_id != $this->suite_id) {
-            throw new exceptions\ArgumentException('无效的suite_id', $suite_id);
-        }
-        if ($sign != sha1($nonce . $this->callback_secret . $timestamp)) {
-            throw new exceptions\ArgumentException('无效的签名', $sign);
-        }
-    }
+        Utils::checkNotEmptyStr($nonce, "nonce");
+        Utils::checkNotEmptyStr($timestamp, "timestamp");
+        Utils::checkNotEmptyStr($signature, "signature");
 
-    public function handleMessage($action, $attributes)
-    {
+        $xmlData = '';
+        $wxMsgCrypt = new WXBizMsgCrypt($this->suiteToken, $this->suiteEncodingAesKey, $this->suiteId);
+        if (0 == $wxMsgCrypt->DecryptMsg($signature, $timestamp, $nonce, $msg_encrypt, $xmlData)) {
+            throw new ArgumentException('invalid msg signature', $signature);
+        }
+
+        echo 'success';
         set_time_limit(0);
         ignore_user_abort();
         function_exists('fastcgi_finish_request') && fastcgi_finish_request();
-        
-        if ($action === 'service/suite_ticket') {
-            if (isset($attributes['suite_ticket'])) {
-                $this->setSuiteTicket($attributes['suite_ticket']);
-            }
-        } else {
-            $method = str_replace('/', '_', $action);
-            if (method_exists($this, $method)) {
-                $this->$method();
-            }
+
+        $this->log('xml data: '.$xmlData, $this->suiteId);
+        $xmlData = simplexml_load_string($xmlData, "SimpleXMLElement", LIBXML_NOCDATA);
+        if ($xmlData === false) {
+            $this->log('load msg data failed', $this->suiteId);
+            exit;
         }
+
+        $suiteId = strval($xmlData->SuiteId);
+        if ($suiteId != $this->suiteId) {
+            $this->log('msg suiteid('.$suiteId.') does not match the current suiteid', $this->suiteId);
+            exit;
+        }
+
+        (new CorpServiceHandle($this, $xmlData))->handle();
     }
 }

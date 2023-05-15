@@ -6,10 +6,11 @@ use Tcepaas\Helper\Utils;
 
 abstract class CorpApi extends Api
 {
-    use Trait\UserTrait;
-    use Trait\DepartTrait;
-    use Trait\SchoolUserTrait;
-    use Trait\SchoolDepartTrait;
+    use Traits\UserTrait;
+    use Traits\DepartTrait;
+    use Traits\SchoolUserTrait;
+    use Traits\SchoolClassTrait;
+    use Traits\SchoolDepartTrait;
 
     const CP_ACCESS_TOKEN = 'EPAAS-AT-';
 
@@ -23,15 +24,15 @@ abstract class CorpApi extends Api
         $this->agentSecret = $agent_secret;
     }
 
-    public function GetAccessToken($bflush = false)
+    public function getAccessToken($bflush = false)
     {
         if ($this->accessToken) {
             return $this->accessToken;
         }
 
         throw new NotImplementedException();
-        /*Utils::checkNotEmptyStr($this->corpId, "corpid");
-        Utils::checkNotEmptyStr($this->agentSecret, "agent_secret");
+        /*Utils::checkEmptyStr($this->corpId, "corpid");
+        Utils::checkEmptyStr($this->agentSecret, "agent_secret");
 
         $cacheKey = self::ACCESS_TOKEN . $this->corpId.'-'.$this->agentSecret;
         $this->accessToken = $bflush ? '' : $this->getCache($cacheKey);
@@ -52,21 +53,25 @@ abstract class CorpApi extends Api
 
     public function setAccessToken($access_token)
     {
-        Utils::checkNotEmptyStr($access_token, 'access_token');
+        Utils::checkEmptyStr($access_token, 'access_token');
         $this->accessToken = $access_token;
     }
 
-    protected function request($method, $uri, $data = [], $headers = [])
+    public function getUserInfoByToken($user_token)
     {
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => self::BASE_URL, 
-            'timeout' => 15
-        ]);
-        $response = $client->request($method, uri, $data, $headers);
-        if ($response->getStatusCode() == 204) {
-            return [];
-        } else {
-            return json_decode($this->response->getBody()->getContents(), true);
-        }
+        Utils::checkEmptyStr($user_token);
+        return $this->get('account/userinfo', ['access_token' => $user_token]);
+    }
+
+    public function getUserPhone($userid)
+    {
+        Utils::checkEmptyStr($userid);
+        return $this->get('user/phone/get', ['access_token' => $this->getAccessToken(), 'userid' => $userid]);
+    }
+
+    public function getUserPhones($userids)
+    {
+        Utils::checkEmptyStrArray($userids);
+        return $this->post('user/phone/get?access_token='.$this->getAccessToken(), ['userids' => $userids]);
     }
 }

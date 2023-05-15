@@ -20,12 +20,12 @@ abstract class CorpService extends Api
     protected $corpAccessToken;
     protected $suiteAccessToken;
 
-    public function __construct($suite_id, $suite_secret)
+    public function __construct($suiteid, $suite_secret)
     {
-        Utils::checkNotEmptyStr($suite_id, "suite_id");
-        Utils::checkNotEmptyStr($suite_secret, "suite_secret");
+        Utils::checkEmptyStr($suiteid, "suite_id");
+        Utils::checkEmptyStr($suite_secret, "suite_secret");
 
-        $this->suiteId = $suite_id;
+        $this->suiteId = $suiteid;
         $this->suiteSecret = $suite_secret;
     }
 
@@ -45,7 +45,7 @@ abstract class CorpService extends Api
 
     public function setSuiteTicket($suite_ticket)
     {
-        Utils::checkNotEmptyStr($suite_ticket, "suite_ticket");
+        Utils::checkEmptyStr($suite_ticket, "suite_ticket");
 
         $this->suiteTicket = $suite_ticket;
         $this->setCache(self::CP_SUITE_TICKET . $this->suite_id, $this->suiteTicket, 600);
@@ -69,9 +69,6 @@ abstract class CorpService extends Api
             'suite_ticket' => $this->getSuiteTicket()
         ];
         $response = $this->post('get_suite_token', $params);
-        if (isset($response['errcode']) && $response['errcode'] != 0) {
-            throw new ApiException($response['errmsg'] ?? 'unknown error', $response['errcode']);
-        }
         if (!isset($response['suite_access_token'])) {
             throw new ApiException('response missing suite_access_token');
         }
@@ -83,34 +80,27 @@ abstract class CorpService extends Api
 
     public function getCorpPermanentCode($auth_code)
     {
-        $params = [
-            'auth_code' => $auth_code
-        ];
-        $response = $this->post('get_permanent_code?suite_access_token='.$this->getSuiteToken(), $params);
-        if (isset($response['errcode']) && $response['errcode'] != 0) {
-            throw new ApiException($response['errmsg'] ?? 'unknown error', $response['errcode']);
-        }
-
-        return $response;
+        Utils::checkEmptyStr($auth_code, "auth_code");
+        return $this->post('get_permanent_code?suite_access_token='.$this->getSuiteToken(), ['auth_code' => $auth_code]);
     }
 
-    public function getCorpInfo($corp_id, $permanent_code)
+    public function getCorpInfo($corpid, $permanent_code)
     {
-        $params = [
-            'auth_corpid' => $corp_id,
+        Utils::checkEmptyStr($corpid, "corpid");
+        Utils::checkEmptyStr($permanent_code, "permanent_code");
+
+        return $this->post('get_auth_info?suite_access_token='.$this->getSuiteToken(), [
+            'auth_corpid' => $corpid,
             'permanent_code' => $permanent_code
-        ];
-        $response = $this->post('get_auth_info?suite_access_token='.$this->getSuiteToken(), $params);
-        if (isset($response['errcode']) && $response['errcode'] != 0) {
-            throw new ApiException($response['errmsg'] ?? 'unknown error', $response['errcode']);
-        }
-
-        return $response;
+        ]);
     }
 
-    public function getCorpAccessToken($corp_id, $permanent_code)
+    public function getCorpAccessToken($corpid, $permanent_code)
     {
-        $cacheKey = self::CP_CORP_ACCESS_TOKEN . $corp_id . '=' . $permanent_code;
+        Utils::checkEmptyStr($corpid, "corpid");
+        Utils::checkEmptyStr($permanent_code, "permanent_code");
+
+        $cacheKey = self::CP_CORP_ACCESS_TOKEN . $corpid . '=' . $permanent_code;
         if (isset($this->corpAccessToken[$cacheKey]) && $this->corpAccessToken[$cacheKey]) {
             return $this->corpAccessToken[$cacheKey];
         }
@@ -120,15 +110,11 @@ abstract class CorpService extends Api
             return $this->corpAccessToken[$cacheKey];
         }
 
-        $params = [
-            'auth_corpid' => $corp_id,
+        $response = $this->post('get_corp_token?suite_access_token='.$this->getSuiteToken(), [
+            'auth_corpid' => $corpid,
             'permanent_code' => $permanent_code
-        ];
-        $response = $this->post('get_corp_token?suite_access_token='.$this->getSuiteToken(), $params);
-        if (isset($response['errcode']) && $response['errcode'] != 0) {
-            throw new ApiException($response['errmsg'] ?? 'unknown error', $response['errcode']);
-        }
-
+        ]);
+        
         $this->corpAccessToken[$cacheKey] = $response['access_token'];
         $this->setCache($cacheKey, $this->corpAccessToken[$cacheKey], $response['expires_in']);
         return $this->corpAccessToken[$cacheKey];
@@ -136,25 +122,26 @@ abstract class CorpService extends Api
 
     public function getUserAccessToken($code)
     {
-    }
+        Utils::checkEmptyStr($code, "code");
 
-    public function getUserInfoByToken($user_token)
-    {
-    }
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', 'https://sso.qq.com/open/access_token', ['query' => [
+            'appid' => $this->suiteId,
+            'secret' => $this->suiteSecret,
+            'code' => $code,
+            'grant_type' => 'authorization_code'
+        ]]);
+        if (isset($response['code']) && $response['code'] != 0) {
+            throw new ApiException($response['msg'] ?? 'unknown error', $response['msg']);
+        }
 
-    abstract public function getCorpApi($corp_id, $permanent_code);
+        return $response;
+    }
 
     protected function request($method, $uri, $data = [], $headers = [])
     {
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => self::BASE_URL, 
-            'timeout' => 15
-        ]);
-        $response = $client->request($method, 'service/' . uri, $data, $headers);
-        if ($response->getStatusCode() == 204) {
-            return [];
-        } else {
-            return json_decode($this->response->getBody()->getContents(), true);
-        }
+        parent::request($method, 'service/'.$uri, $data, $headers);
     }
+
+    abstract public function getCorpApi($corpid, $permanent_code);
 }

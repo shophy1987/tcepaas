@@ -4,30 +4,123 @@ namespace Tcepaas\Helper;
 
 use Tcepaas\Exception\ArgumentException;
 
-class Utils { 
-
-    static public function notEmptyStr($var)
+class Utils
+{
+    static public function checkEmptyStr($var, $name)
     {
-        return is_string($var) && ($var != "");
+        if (!(is_string($var) && ($var != ''))) {
+            throw new ArgumentException("can not be empty string", $name);
+        }
     }
 
-    static public function checkNotEmptyStr($var, $name)
+    // 非负数
+    static public function checkNonnegativeInt($var, $name)
     {
-        if (!self::notEmptyStr($var))
-            throw new ArgumentException('can not be empty string', $name);
+        if (!(is_int($var) && $var >= 0)) {
+            throw new ArgumentException("need nonnegative int", $name);
+        } 
     }
 
-    static public function checkIsUInt($var, $name)
+    // 正整数
+    static public function checkPositiveInt($var, $name)
     {
-        if (!(is_int($var) && $var >= 0))
-            throw new ArgumentException("need unsigned int", $name);
+        if (!(is_int($var) && $var > 0)) {
+            throw new ArgumentException("need positiveInt", $name);
+        } 
     }
 
-    static public function checkNotEmptyArray($var, $name)
+    static public function checkEmptyArray(&$array, $name)
     {
         if (!is_array($var) || count($var) == 0) {
             throw new ArgumentException("can not be empty array", $name);
         }
+    }
+
+    static public function checkArrayNonnegativeInt(&$array, $key)
+    {
+        if (!isset($array[$key])) {
+            throw new ArgumentException("required parameters are missing", $key);
+        }
+        if (!(is_int($array[$key]) && $array[$key] >= 0)) {
+            throw new ArgumentException("need unsigned int", $key);
+        }
+    }
+
+    static public function checkArrayPositiveInt(&$array, $key)
+    {
+        if (!isset($array[$key])) {
+            throw new ArgumentException("required parameters are missing", $key);
+        }
+        if (!(is_int($array[$key]) && $array[$key] > 0)) {
+            throw new ArgumentException("need unsigned int", $key);
+        }
+    }
+
+    static public function checkArrayEmptyStr(&$array, $key)
+    {
+        if (!isset($array[$key])) {
+            throw new ArgumentException("required parameters are missing", $key);
+        }
+        if (!(is_string($array[$key]) && ($array[$key] != ''))) {
+            throw new ArgumentException("can not be empty string", '['.$key.']');
+        }
+    }
+
+    static public function checkEmptyStrArray(&$array, $key)
+    {
+        if (!isset($array[$key])) {
+            throw new ArgumentException("required parameters are missing", $key);
+        }
+        if (!notEmptyStrArray($array[$key])) {
+            throw new ArgumentException("can not be empty array", $key);
+        }
+    }
+
+    static public function checkPositiveIntArray(&$array, $key)
+    {
+        if (!isset($array[$key])) {
+            throw new ArgumentException("required parameters are missing", $key);
+        }
+        if (!positiveIntArray($array[$key])) {
+            throw new ArgumentException("can not be empty array", $key);
+        }
+    }
+
+    static function notEmptyStrArray(&$var) 
+    {
+        if (!is_array($var))
+            return false;
+
+        foreach ($var as $_val) {
+            if (is_array($_val) && !self::notEmptyArray($_val))
+                return false;
+            if (!is_string($_val) || $_val == '')
+                return false;
+        }
+
+        return true;
+    }
+
+    static function positiveIntArray(&$var) 
+    {
+        if (!is_array($var))
+            return false;
+
+        foreach ($var as $_val) {
+            if (is_array($_val) && !self::notEmptyArray($_val))
+                return false;
+            if (!is_int($_val) || $_val <= 0)
+                return false;
+        }
+
+        return true;
+    }
+
+    static public function arrayGet(&$array, $key, $default=null)
+    {
+        if (array_key_exists($key, $array))
+            return $array[$key];
+        return $default;
     }
 
     static public function setIfNotNull($var, $name, &$args)
@@ -36,13 +129,6 @@ class Utils {
             $args[$name] = $var;
         }
     }
-
-    static public function arrayGet($array, $key, $default=null)
-    {
-        if (array_key_exists($key, $array))
-            return $array[$key];
-        return $default;
-    } 
 
 	/**
 	 * 数组 转 对象
@@ -105,5 +191,4 @@ class Utils {
         $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);        
         return $values;
     }
-
-} // class Utils
+}
