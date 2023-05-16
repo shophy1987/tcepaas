@@ -33,22 +33,22 @@ abstract class Api
         return $this->request('DELETE', $uri, ['headers' => $headers, 'query' => $data]);
     }
 
-    protected function request($method, $uri, $data = [], $headers = [])
+    protected function request($method, $uri, $options = [])
     {
         $client = new \GuzzleHttp\Client([
             'base_uri' => self::BASE_URL, 
             'timeout' => 15
         ]);
-        $response = $client->request($method, uri, $data, $headers);
+        $response = $client->request($method, $uri, $options);
         if ($response->getStatusCode() == 204) {
             return [];
         } else {
-            $result = json_decode($this->response->getBody()->getContents(), true);
+            $response = json_decode($response->getBody()->getContents(), true);
             if (isset($response['errcode']) && $response['errcode'] != 0) {
                 throw new ApiException($response['errmsg'] ?? 'unknown error', $response['errcode']);
             }
 
-            return $result;
+            return $response;
         }
     }
 

@@ -21,17 +21,17 @@ namespace Tcepaas;
  */
 class ErrorCode
 {
-	public static $OK = 0;
-	public static $SystemError = -40000;
-	public static $ValidateSignatureError = -40001;
-	public static $ParseXmlError = -40002;
-	public static $ComputeSignatureError = -40003;
-	public static $IllegalAesKey = -40004;
-	public static $ValidateCorpidError = -40005;
-	public static $EncryptAESError = -40006;
-	public static $DecryptAESError = -40007;
-	public static $IllegalBuffer = -40008;
-	public static $EncodeBase64Error = -40009;
-	public static $DecodeBase64Error = -40010;
-	public static $GenReturnXmlError = -40011;
+	const OK = 0;
+	const SystemError = -40000;
+	const ValidateSignatureError = -40001;
+	const ParseXmlError = -40002;
+	const ComputeSignatureError = -40003;
+	const IllegalAesKey = -40004;
+	const ValidateCorpidError = -40005;
+	const EncryptAESError = -40006;
+	const DecryptAESError = -40007;
+	const IllegalBuffer = -40008;
+	const EncodeBase64Error = -40009;
+	const DecodeBase64Error = -40010;
+	const GenReturnXmlError = -40011;
 }

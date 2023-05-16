@@ -71,7 +71,7 @@ class Utils
         if (!isset($array[$key])) {
             throw new ArgumentException("required parameters are missing", $key);
         }
-        if (!notEmptyStrArray($array[$key])) {
+        if (!self::notEmptyStrArray($array[$key])) {
             throw new ArgumentException("can not be empty array", $key);
         }
     }
@@ -81,7 +81,7 @@ class Utils
         if (!isset($array[$key])) {
             throw new ArgumentException("required parameters are missing", $key);
         }
-        if (!positiveIntArray($array[$key])) {
+        if (!self::positiveIntArray($array[$key])) {
             throw new ArgumentException("can not be empty array", $key);
         }
     }

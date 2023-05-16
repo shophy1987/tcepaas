@@ -131,6 +131,7 @@ abstract class CorpService extends Api
             'code' => $code,
             'grant_type' => 'authorization_code'
         ]]);
+        $response = json_decode($response->getBody()->getContents(), true);
         if (isset($response['code']) && $response['code'] != 0) {
             throw new ApiException($response['msg'] ?? 'unknown error', $response['msg']);
         }
@@ -138,9 +139,9 @@ abstract class CorpService extends Api
         return $response;
     }
 
-    protected function request($method, $uri, $data = [], $headers = [])
+    protected function request($method, $uri, $options = [])
     {
-        parent::request($method, 'service/'.$uri, $data, $headers);
+        parent::request($method, 'service/'.$uri, $options);
     }
 
     abstract public function getCorpApi($corpid, $permanent_code);

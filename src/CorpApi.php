@@ -44,7 +44,7 @@ abstract class CorpApi extends Api
             'corpid' => $this->corpId,
             'corpsecret' => $this->agentSecret
         ];
-        $response = $this->post('/cgi-bin/gettoken', $params);
+        $response = $this->post('cgi-bin/gettoken', $params);
 
         $this->accessToken = $response['access_token'];
         $this->setCache($cacheKey, $this->accessToken, $response['expires_in']);

@@ -2,8 +2,6 @@
 
 namespace Tcepaas\Exception;
 
-use Tcepaas\ErrorCode;
-
 class NotImplementedException extends ApiException
 {
     public function __construct() {

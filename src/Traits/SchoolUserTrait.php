@@ -6,9 +6,9 @@ trait SchoolUserTrait
 {
     public function getSchoolDepartStudents($params)
     {
-        Utils::checkPositiveIntArray($params, 'department_id');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'department_id');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
 
         $params['access_token'] = $this->getAccessToken();
         return $this->get('school/user/list_simple', $params);
@@ -16,9 +16,9 @@ trait SchoolUserTrait
 
     public function getSchoolDepartStudentsDetail($params)
     {
-        Utils::checkPositiveIntArray($params, 'department_id');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'department_id');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
 
         $params['access_token'] = $this->getAccessToken();
         return $this->get('school/user/list', $params);
@@ -76,16 +76,16 @@ trait SchoolUserTrait
 
     public function searchSchoolStudent($params)
     {
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
         return $this->post('school/student/search?access_token='.$this->getAccessToken(), $params);
     }
 
     public function searchSchoolParent($params)
     {
         Utils::checkArrayEmptyStr($params, 'name');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
 
         $params['access_token'] = $this->getAccessToken();
         return $this->get('school/parent/search', $params);
@@ -93,8 +93,8 @@ trait SchoolUserTrait
 
     public function searchSchoolStudentInSubOrgs($params)
     {
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
         return $this->post('school/student/search_in_sub_orgs?access_token='.$this->getAccessToken(), $params);
     }
 
@@ -106,8 +106,8 @@ trait SchoolUserTrait
 
         Utils::checkArrayEmptyStr($params['search_keys'], 'key');
         Utils::checkArrayEmptyStr($params['search_keys'], 'value');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
         return $this->post('school/student/search_in_sub_orgs?access_token='.$this->getAccessToken(), $params);
     }
 }

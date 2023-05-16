@@ -6,7 +6,7 @@ use Tcepaas\ErrorCode;
 
 class ApiException extends \Exception
 {
-    public function __construct($message, $code = ErrorCode::SystemError, Exception $previous = null) {
+    public function __construct($message, $code = ErrorCode::SystemError, \Exception $previous = null) {
         parent::__construct($message, $code, $previous);
     }
 

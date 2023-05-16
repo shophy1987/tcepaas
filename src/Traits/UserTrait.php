@@ -36,9 +36,9 @@ trait UserTrait
 
     public function getDepartUsers($params)
     {
-        Utils::checkPositiveIntArray($params, 'department_id');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'department_id');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
 
         $params['access_token'] = $this->getAccessToken();
         return $this->get('user/list_simple', $params);
@@ -46,10 +46,10 @@ trait UserTrait
 
     public function getDepartUsersDetail($params)
     {
-        Utils::checkPositiveIntArray($params, 'department_id');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
-        Utils::checkPositiveIntArray($params, 'department_type');
+        Utils::checkArrayPositiveInt($params, 'department_id');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'department_type');
 
         $params['access_token'] = $this->getAccessToken();
         return $this->get('user/list', $params);
@@ -57,15 +57,15 @@ trait UserTrait
 
     public function searchUser($params)
     {
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
         return $this->post('user/search?access_token='.$this->getAccessToken(), $params);
     }
 
     public function searchUserInSubOrgs($params)
     {
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
         return $this->post('user/search_in_sub_orgs?access_token='.$this->getAccessToken(), $params);
     }
 
@@ -85,8 +85,8 @@ trait UserTrait
 
         Utils::checkArrayEmptyStr($params['search_keys'], 'key');
         Utils::checkArrayEmptyStr($params['search_keys'], 'value');
-        Utils::checkPositiveIntArray($params, 'page_index');
-        Utils::checkPositiveIntArray($params, 'page_size');
+        Utils::checkArrayPositiveInt($params, 'page_index');
+        Utils::checkArrayPositiveInt($params, 'page_size');
         return $this->post('user/search_profile?access_token='.$this->getAccessToken(), $params);
     }
 
