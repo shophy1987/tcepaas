@@ -36,16 +36,16 @@ trait NotifyTrait
         ignore_user_abort();
         function_exists('fastcgi_finish_request') && fastcgi_finish_request();
 
-        $this->log('xml data: '.$xmlData, $this->suiteId);
+        $this->logInfo('xml data: '.$xmlData, $this->suiteId);
         $xmlData = simplexml_load_string($xmlData, "SimpleXMLElement", LIBXML_NOCDATA);
         if ($xmlData === false) {
-            $this->log('load msg data failed', $this->suiteId);
+            $this->logError('load msg data failed', $this->suiteId);
             exit;
         }
 
         $suiteId = strval($xmlData->SuiteId);
         if ($suiteId != $this->suiteId) {
-            $this->log('msg suiteid('.$suiteId.') does not match the current suiteid', $this->suiteId);
+            $this->logError('msg suiteid('.$suiteId.') does not match the current suiteid', $this->suiteId);
             exit;
         }
 

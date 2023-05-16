@@ -4,8 +4,8 @@ namespace Tcepaas;
 
 class CorpServiceHandle
 {
-    private $data;
-    private $service;
+    protected $data;
+    protected $service;
 
     public function __construct(CorpService &$corpService, &$msgData)
     {

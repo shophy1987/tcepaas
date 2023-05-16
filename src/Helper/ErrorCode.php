@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcepaas;
+namespace Tcepaas\Helper;
 
 /**
  * error code 说明.

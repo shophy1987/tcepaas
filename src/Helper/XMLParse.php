@@ -26,7 +26,7 @@ class XMLParse
 			return array(0, $encrypt, $tousername);
 		} catch (\Exception $e) {
 			print $e . "\n";
-			return array(ErrorCode::$ParseXmlError, null, null);
+			return array(ErrorCode::ParseXmlError, null, null);
 		}
 	}
 

@@ -2,7 +2,7 @@
 
 namespace Tcepaas\Exception;
 
-use Tcepaas\ErrorCode;
+use Tcepaas\Helper\ErrorCode;
 
 class ApiException extends \Exception
 {

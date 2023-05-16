@@ -42,10 +42,10 @@ class Prpcrypt
 
 			//print(base64_encode($encrypted));
 			//使用BASE64对加密后的字符串进行编码
-			return array(ErrorCode::$OK, base64_encode($encrypted));
+			return array(ErrorCode::OK, base64_encode($encrypted));
 		} catch (\Exception $e) {
 			print $e;
-			return array(ErrorCode::$EncryptAESError, null);
+			return array(ErrorCode::EncryptAESError, null);
 		}
 	}
 
@@ -68,7 +68,7 @@ class Prpcrypt
 			@mcrypt_generic_deinit($module);
 			@mcrypt_module_close($module);
 		} catch (\Exception $e) {
-			return array(ErrorCode::$DecryptAESError, null);
+			return array(ErrorCode::DecryptAESError, null);
 		}
 
 
@@ -86,10 +86,10 @@ class Prpcrypt
 			$from_corpid = substr($content, $xml_len + 4);
 		} catch (\Exception $e) {
 			print $e;
-			return array(ErrorCode::$IllegalBuffer, null);
+			return array(ErrorCode::IllegalBuffer, null);
 		}
 		if ($from_corpid != $corpid)
-			return array(ErrorCode::$ValidateCorpidError, null);
+			return array(ErrorCode::ValidateCorpidError, null);
 		return array(0, $xml_content);
 
 	}

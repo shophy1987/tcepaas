@@ -52,7 +52,11 @@ abstract class Api
         }
     }
 
-    abstract protected function log($message, $type);
+    abstract protected function logInfo($message, $category);
+
+    abstract protected function logError($message, $category);
+
+    abstract protected function logWarning($message, $category);
 
     abstract protected function getCache($key);
 

@@ -37,7 +37,7 @@ class WXBizMsgCrypt
 	public function VerifyURL($sMsgSignature, $sTimeStamp, $sNonce, $sEchoStr, &$sReplyEchoStr)
 	{
 		if (strlen($this->m_sEncodingAesKey) != 43) {
-			return ErrorCode::$IllegalAesKey;
+			return ErrorCode::IllegalAesKey;
 		}
 
 		$pc = new Prpcrypt($this->m_sEncodingAesKey);
@@ -52,7 +52,7 @@ class WXBizMsgCrypt
 
 		$signature = $array[1];
 		if ($signature != $sMsgSignature) {
-			return ErrorCode::$ValidateSignatureError;
+			return ErrorCode::ValidateSignatureError;
 		}
 
 		$result = $pc->decrypt($sEchoStr, $this->m_sCorpid);
@@ -61,7 +61,7 @@ class WXBizMsgCrypt
 		}
 		$sReplyEchoStr = $result[1];
 
-		return ErrorCode::$OK;
+		return ErrorCode::OK;
 	}
 	/**
 	 * 将公众平台回复用户的消息加密打包.
@@ -107,7 +107,7 @@ class WXBizMsgCrypt
 		//生成发送的xml
 		$xmlparse = new XMLParse;
 		$sEncryptMsg = $xmlparse->generate($encrypt, $signature, $sTimeStamp, $sNonce);
-		return ErrorCode::$OK;
+		return ErrorCode::OK;
 	}
 
 
@@ -130,7 +130,7 @@ class WXBizMsgCrypt
 	public function DecryptMsg($sMsgSignature, $sTimeStamp = null, $sNonce, $sPostData, &$sMsg)
 	{
 		if (strlen($this->m_sEncodingAesKey) != 43) {
-			return ErrorCode::$IllegalAesKey;
+			return ErrorCode::IllegalAesKey;
 		}
 
 		$pc = new Prpcrypt($this->m_sEncodingAesKey);
@@ -162,7 +162,7 @@ class WXBizMsgCrypt
 
 		$signature = $array[1];
 		if ($signature != $sMsgSignature) {
-			return ErrorCode::$ValidateSignatureError;
+			return ErrorCode::ValidateSignatureError;
 		}
 
 		$result = $pc->decrypt($encrypt, $this->m_sCorpid);
@@ -171,6 +171,6 @@ class WXBizMsgCrypt
 		}
 		$sMsg = $result[1];
 
-		return ErrorCode::$OK;
+		return ErrorCode::OK;
 	}
 }
