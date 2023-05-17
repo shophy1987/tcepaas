@@ -7,7 +7,7 @@ use Tcepaas\Exception\ApiException;
 
 abstract class CorpService extends Api 
 {
-    use Traits\NotifyTrait;
+    //use Traits\NotifyTrait;
 
     const CP_SUITE_TICKET = 'EPAAS-ST-';
     const CP_CORP_ACCESS_TOKEN = 'EPAAS-CAT-';
