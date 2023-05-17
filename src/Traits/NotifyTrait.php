@@ -2,7 +2,7 @@
 
 namespace Tcepaas\Traits;
 
-use Tcepaas\CorpServiceHandle;
+use Tcepaas\Helper\Utils;
 use Tcepaas\Exception\ArgumentException;
 
 trait NotifyTrait
@@ -59,9 +59,9 @@ trait NotifyTrait
     }
 
     // 推送suite_ticket
-    public function suite_ticket() {
-        $service->setSuiteTicket(strval($this->data->SuiteTicket));
-    }
+    // public function suite_ticket() {
+    //     $service->setSuiteTicket(strval($this->data->SuiteTicket));
+    // }
 
     // // 授权成功通知,从企业微信应用市场发起授权时，企业微信后台会推送授权成功通知
     // public function create_auth() { }

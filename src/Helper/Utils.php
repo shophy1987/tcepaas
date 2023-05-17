@@ -29,7 +29,7 @@ class Utils
         } 
     }
 
-    static public function checkEmptyArray(&$array, $name)
+    static public function checkEmptyArray(&$var, $name)
     {
         if (!is_array($var) || count($var) == 0) {
             throw new ArgumentException("can not be empty array", $name);
