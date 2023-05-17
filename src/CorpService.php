@@ -35,7 +35,7 @@ abstract class CorpService extends Api
             return $this->suiteTicket;
         }
 
-        $this->suiteTicket = $this->getCache(self::CP_SUITE_TICKET . $this->suite_id);
+        $this->suiteTicket = $this->getCache(self::CP_SUITE_TICKET . $this->suiteId);
         if ($this->suiteTicket) {
             return $this->suiteTicket;
         }
@@ -48,7 +48,7 @@ abstract class CorpService extends Api
         Utils::checkEmptyStr($suite_ticket, "suite_ticket");
 
         $this->suiteTicket = $suite_ticket;
-        $this->setCache(self::CP_SUITE_TICKET . $this->suite_id, $this->suiteTicket, 600);
+        $this->setCache(self::CP_SUITE_TICKET . $this->suiteId, $this->suiteTicket, 600);
     }
 
     public function getSuiteToken()
@@ -57,14 +57,14 @@ abstract class CorpService extends Api
             return $this->suiteAccessToken;
         }
 
-        $cache_key = self::CP_SUITE_ACCESS_TOKEN . $this->suite_id;
+        $cache_key = self::CP_SUITE_ACCESS_TOKEN . $this->suiteId;
         $this->suiteAccessToken = $this->getCache($cache_key);
         if ($this->suiteAccessToken) {
             return $this->suiteAccessToken;
         }
 
         $params = [
-            'suite_id' => $this->suiteAccessToken,
+            'suite_id' => $this->suiteId,
             'suite_secret' => $this->suiteSecret,
             'suite_ticket' => $this->getSuiteTicket()
         ];
