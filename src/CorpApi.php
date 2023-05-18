@@ -73,6 +73,6 @@ abstract class CorpApi extends Api
     public function getUserPhones($userids)
     {
         Utils::checkEmptyStrArray($userids, 'userids');
-        return $this->post('user/phone/get?access_token='.$this->getAccessToken(), ['userids' => $userids]);
+        return $this->post('user/phone/batch_get?access_token='.$this->getAccessToken(), ['userids' => $userids]);
     }
 }
