@@ -3,6 +3,7 @@
 namespace Tcepaas\Traits;
 
 use Tcepaas\Helper\Utils;
+use Tcepaas\Helper\WXBizMsgCrypt;
 use Tcepaas\Exception\ArgumentException;
 
 trait NotifyTrait
@@ -12,8 +13,8 @@ trait NotifyTrait
 
     public function setNotifyToken($token, $encoding_aes_key)
     {
-        Utils::checkNotEmptyStr($token, "token");
-        Utils::checkNotEmptyStr($encoding_aes_key, "encoding_aes_key");
+        Utils::checkEmptyStr($token, "token");
+        Utils::checkEmptyStr($encoding_aes_key, "encoding_aes_key");
 
         $this->suiteToken = $token;
         $this->suiteEncodingAesKey = $encoding_aes_key;
@@ -21,9 +22,9 @@ trait NotifyTrait
 
     public function handleMessage($nonce, $timestamp, $signature, $msg_encrypt)
     {
-        Utils::checkNotEmptyStr($nonce, "nonce");
-        Utils::checkNotEmptyStr($timestamp, "timestamp");
-        Utils::checkNotEmptyStr($signature, "signature");
+        Utils::checkEmptyStr($nonce, "nonce");
+        Utils::checkEmptyStr($timestamp, "timestamp");
+        Utils::checkEmptyStr($signature, "signature");
 
         $xmlData = '';
         $wxMsgCrypt = new WXBizMsgCrypt($this->suiteToken, $this->suiteEncodingAesKey, $this->suiteId);

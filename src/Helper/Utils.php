@@ -92,7 +92,7 @@ class Utils
             return false;
 
         foreach ($var as $_val) {
-            if (is_array($_val) && !self::notEmptyArray($_val))
+            if (is_array($_val) && !self::notEmptyStrArray($_val))
                 return false;
             if (!is_string($_val) || $_val == '')
                 return false;
@@ -107,7 +107,7 @@ class Utils
             return false;
 
         foreach ($var as $_val) {
-            if (is_array($_val) && !self::notEmptyArray($_val))
+            if (is_array($_val) && !self::positiveIntArray($_val))
                 return false;
             if (!is_int($_val) || $_val <= 0)
                 return false;
@@ -168,6 +168,7 @@ class Utils
 			return $object;
 		}
 	}
+    
     //数组转XML
     static public function Array2Xml($rootName, $arr)
     {

@@ -2,6 +2,8 @@
 
 namespace Tcepaas\Traits;
 
+use Tcepaas\Helper\Utils;
+
 trait SchoolDepartTrait
 {
     public function getSchoolDepart($params = [])

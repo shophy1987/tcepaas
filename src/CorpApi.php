@@ -3,6 +3,7 @@
 namespace Tcepaas;
 
 use Tcepaas\Helper\Utils;
+use Tcepaas\Exception\NotImplementedException;
 
 abstract class CorpApi extends Api
 {
@@ -59,19 +60,19 @@ abstract class CorpApi extends Api
 
     public function getUserInfoByToken($user_token)
     {
-        Utils::checkEmptyStr($user_token);
+        Utils::checkEmptyStr($user_token, 'user_token');
         return $this->get('account/userinfo', ['access_token' => $user_token]);
     }
 
     public function getUserPhone($userid)
     {
-        Utils::checkEmptyStr($userid);
+        Utils::checkEmptyStr($userid, 'userid');
         return $this->get('user/phone/get', ['access_token' => $this->getAccessToken(), 'userid' => $userid]);
     }
 
     public function getUserPhones($userids)
     {
-        Utils::checkEmptyStrArray($userids);
+        Utils::checkEmptyStrArray($userids, 'userids');
         return $this->post('user/phone/get?access_token='.$this->getAccessToken(), ['userids' => $userids]);
     }
 }

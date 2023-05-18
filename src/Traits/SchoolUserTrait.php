@@ -2,6 +2,9 @@
 
 namespace Tcepaas\Traits;
 
+use Tcepaas\Helper\Utils;
+use Tcepaas\Exception\ArgumentException;
+
 trait SchoolUserTrait
 {
     public function getSchoolDepartStudents($params)

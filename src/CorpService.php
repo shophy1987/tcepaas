@@ -4,6 +4,7 @@ namespace Tcepaas;
 
 use Tcepaas\Helper\Utils;
 use Tcepaas\Exception\ApiException;
+use Tcepaas\Exception\ArgumentException;
 
 abstract class CorpService extends Api 
 {
@@ -81,7 +82,11 @@ abstract class CorpService extends Api
     public function getCorpPermanentCode($auth_code)
     {
         Utils::checkEmptyStr($auth_code, "auth_code");
-        return $this->post('get_permanent_code?suite_access_token='.$this->getSuiteToken(), ['auth_code' => $auth_code]);
+        $response = $this->post('get_permanent_code?suite_access_token='.$this->getSuiteToken(), ['auth_code' => $auth_code]);
+
+        Utils::checkArrayEmptyStr($response, 'corpid');
+        Utils::checkArrayEmptyStr($response, 'permanent_code');
+        return $response;
     }
 
     public function getCorpInfo($corpid, $permanent_code)
@@ -89,10 +94,15 @@ abstract class CorpService extends Api
         Utils::checkEmptyStr($corpid, "corpid");
         Utils::checkEmptyStr($permanent_code, "permanent_code");
 
-        return $this->post('get_auth_info?suite_access_token='.$this->getSuiteToken(), [
+        $response = $this->post('get_auth_info?suite_access_token='.$this->getSuiteToken(), [
             'auth_corpid' => $corpid,
             'permanent_code' => $permanent_code
         ]);
+        if (!isset($response['auth_corp_info'])) {
+            throw new ArgumentException("missing required argument", 'auth_corp_info');
+        }
+
+        return $response['auth_corp_info'];
     }
 
     public function getCorpAccessToken($corpid, $permanent_code)

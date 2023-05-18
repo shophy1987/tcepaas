@@ -2,6 +2,8 @@
 
 namespace Tcepaas\Traits;
 
+use Tcepaas\Helper\Utils;
+
 trait SchoolClassTrait
 {
     // 获取学生在教师的班级列表
