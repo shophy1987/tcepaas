@@ -58,12 +58,6 @@ abstract class CorpApi extends Api
         $this->accessToken = $access_token;
     }
 
-    public function getUserInfoByToken($user_token)
-    {
-        Utils::checkEmptyStr($user_token, 'user_token');
-        return $this->get('account/userinfo', ['access_token' => $user_token]);
-    }
-
     public function getUserPhone($userid)
     {
         Utils::checkEmptyStr($userid, 'userid');
