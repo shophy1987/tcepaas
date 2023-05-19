@@ -152,12 +152,12 @@ abstract class CorpService extends Api
     public function getUserInfoByToken($user_token)
     {
         Utils::checkEmptyStr($user_token, 'user_token');
-        return $this->get('account/userinfo', ['access_token' => $user_token]);
+        return $this->get('/account/userinfo', ['access_token' => $user_token]);
     }
 
     protected function request($method, $uri, $options = [])
     {
-        parent::request($method, 'service/'.$uri, $options);
+        return parent::request($method, strpos($uri, '/') === 0 ? $uri : ('service/'.$uri), $options);
     }
 
     abstract public function getCorpApi($corpid, $permanent_code);
